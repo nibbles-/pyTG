@@ -8,6 +8,8 @@ import os
 import subprocess
 import configparser
 import logging
+import collections
+
 
 # Import requests och crash nicely if it fails.
 try:
@@ -224,13 +226,17 @@ def soaprequest(cmservers=None,username=None,password=None, devices=None):
                   
     # Return dict. So that other functions can use the valuse
     logging.info(result)
-    return result
+    ordered_result = collections.OrderedDict(sorted(result.items()))
+    logging.info(ordered_result)
+    #return result
+    return ordered_result
 
 def makerrdgraph(currentValue=None,rrdtool=None):
     #html definitions
     index_top = """<!DOCTYPE html>
        <html>
        <head>
+       <link rel="stylesheet" type="text/css" href="index.css">
        <meta http-equiv="refresh" content="60">
        <title>pyTG {0}</title>
        </head>
@@ -292,12 +298,12 @@ def makerrdgraph(currentValue=None,rrdtool=None):
             logging.debug("{} {} {}".format(rrdtool, day_graph, graph_settings ,exc_info=True))
         device_top = index_top
         device_bottom = index_bottom
-        index_middle += '<p>{0}</br><a href="{0}.html"><img src="{0}_1D.png" alt="{0}" width=600 height=200></a></p>\n'.format(kv[0])
+        index_middle += '<p class="index">{0}</br><a href="{0}.html"><img src="{0}_1D.png" alt="{0}" class="index"></a></p>\n'.format(kv[0])
         device_middle = '''
-                        <p><img src="{0}_1D.png" alt="{0}"></p>
-                        <p><img src="{0}_1W.png" alt="{0}"></p>
-                        <p><img src="{0}_1M.png" alt="{0}"></p>
-                        <p><img src="{0}_1Y.png" alt="{0}"></p>
+                        <p class="device"><img src="{0}_1D.png" alt="{0}"></p>
+                        <p class="device"><img src="{0}_1W.png" alt="{0}"></p>
+                        <p class="device"><img src="{0}_1M.png" alt="{0}"></p>
+                        <p class="device"><img src="{0}_1Y.png" alt="{0}"></p>
                         '''.format(kv[0])
         with open('images/{0}.html'.format(kv[0]), 'w') as file:
             file.write(device_top)
