@@ -191,6 +191,8 @@ def soaprequest(cmservers=None,username=None,password=None, devices=None):
     # All is sent to the Publisher but adresses the different servers.
     for counter in counters:
         for server in cmservers:
+           # We set location to the current server to even the load.
+           location = "https://{}/perfmonservice/services/PerfmonPort".format(server)
            # Since we loop through all servers the value server and counter will have different content everytime
            perfmonCollectCounterData = createSoapRequest(server, counter)       
            # Sends perfmonCollectCounterData to the server and puts the answer in r. r is of the type response
